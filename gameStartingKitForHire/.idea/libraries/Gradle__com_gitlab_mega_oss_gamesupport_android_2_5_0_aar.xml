@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.gitlab.mega-oss:gamesupport-android:2.5.0@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ae39df4f621d97c411ac0135372e08b4/gamesupport-android-2.5.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ae39df4f621d97c411ac0135372e08b4/gamesupport-android-2.5.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ae39df4f621d97c411ac0135372e08b4/gamesupport-android-2.5.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
