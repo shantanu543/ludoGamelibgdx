@@ -17,11 +17,19 @@ public class Board extends Box{
     private ArrayList<Box>boardArray = new ArrayList<>();
     private Box currentBox;
     private Label HomeBoxLabel = new Label("", GameAssetManager.getInstance().scoreLabelStyle);
+    private Box CurrentPlayerNumberBox;
+    private Label CurrentPlayerNumberBoxLabel = new Label("", GameAssetManager.getInstance().scoreLabelStyle);
     public Board() {
         super(23,23,Color.LIGHT_GRAY);
         this.HomeBoxLabel.setSize(GameData._virtualWidth,GameAssetManager.getInstance().scoreFontSize);
         this.HomeBoxLabel.setAlignment(Align.left);
         this.HomeBoxLabel.setWrap(true);
+        this.CurrentPlayerNumberBox = new Box(23,23,Color.ORANGE);
+        this.CurrentPlayerNumberBox.setPos((Constants.BOX_Width * 12),(Constants.BOX_Height * 16));
+        this.CurrentPlayerNumberBoxLabel.setPosition((Constants.BOX_Width * 12) +(Constants.BOX_Width / 2) ,(Constants.BOX_Height * 16));
+        this.CurrentPlayerNumberBoxLabel.setSize(GameData._virtualWidth,GameAssetManager.getInstance().scoreFontSize);
+        this.CurrentPlayerNumberBoxLabel.setAlignment(Align.left);
+        this.CurrentPlayerNumberBoxLabel.setWrap(true);
     }
 
     public void onTouchDown(float x, float y) {
@@ -44,6 +52,12 @@ public class Board extends Box{
         for(Box obj:boardArray){
             obj.draw(batch);
         }
+        this.CurrentPlayerNumberBox.draw(batch);
+        this.CurrentPlayerNumberBoxLabel.draw(batch,1);
+    }
+
+    public void setCurrentPlayerNumberBoxLabel(int arg){
+        this.CurrentPlayerNumberBoxLabel.setText(arg);
     }
 
     public void drawBoard(){
@@ -150,7 +164,7 @@ public class Board extends Box{
                 currentPlayersHomeBox = Constants.homeBox_GREEN;
                 break;
             case 2:
-                currentPlayersHomeBox = Constants.homeBox_GREEN;
+                currentPlayersHomeBox = Constants.homeBox_YELLOW;
                 break;
             case 3:
                 currentPlayersHomeBox = Constants.homeBox_BLUE;

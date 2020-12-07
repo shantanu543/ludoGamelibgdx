@@ -37,7 +37,7 @@ public class Dice extends Box {
 
     public void setDiceLabel(){
         this.DiceLabel.setText(Constants.DICE_MIN + (int)(Math.random() * Constants.DICE_MAX) );
-//        this.DiceLabel.setText((this.curr++) % 7);
+//        this.DiceLabel.setText((this.curr++) % 7)
     }
 
     public int getDiceLabel(){

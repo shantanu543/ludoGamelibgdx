@@ -37,7 +37,9 @@ public class GameObjectManager {
 //        board = new Board();
 //        objs.add(box);
 //        objs.add(ball);
-        player.setCurrentPlayer(0);
+        board.resetAlpha();
+        board.wobblePlayers(0);
+        board.setCurrentPlayerNumberBoxLabel(0);
         objs.add(board);
         objs.add(player);
         objs.add(dice);

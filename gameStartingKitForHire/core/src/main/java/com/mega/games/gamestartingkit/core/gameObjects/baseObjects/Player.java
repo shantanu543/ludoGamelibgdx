@@ -3,8 +3,11 @@ package com.mega.games.gamestartingkit.core.gameObjects.baseObjects;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.mega.games.gamestartingkit.core.Constants;
 import com.mega.games.gamestartingkit.core.dataLoaders.GameAssetManager;
+import com.mega.games.gamestartingkit.core.dataLoaders.GameData;
 
 import java.util.ArrayList;
 
@@ -23,6 +26,7 @@ public class Player extends Circle {
     public  Player(Board board){
         super(15, Color.CORAL);
         this.boardObj = board;
+
     }
 
     @Override
@@ -47,7 +51,7 @@ public class Player extends Circle {
     }
     @Override
     public void onTouchDown(float x, float y) {
-            if(x/23 >= 0 && x/23 <= 14 && y/23 >= 0 && y/23 <= 14){
+            if(Math.floor(x/23) >= 0 && Math.floor(x/23) <= 14 && Math.floor(y/23) >= 0 && Math.floor(y/23) <= 14){
                 double X = x;
                 double Y = y;
                 this.currentPawnsCoordinates.x = (float) Math.floor(X/23);
@@ -65,20 +69,25 @@ public class Player extends Circle {
         boolean checkPlayerPawnOut = checkPlayerPawnOut(this.currentPlayerNumber);
         if( checkPlayerPawnOut == false && arg != 6){
             boardObj.resetAlpha();
-            boardObj.wobblePlayers(this.currentPlayerNumber);
-            this.currentPlayerNumber++;
-            if(this.currentPlayerNumber > 3)
-                this.currentPlayerNumber = 0;
+            boardObj.wobblePlayers(this.currentPlayerNumber+1 <4 ? this.currentPlayerNumber+1 : 0);
+            setCurrentPlayerNumber();
         }
-        else if(checkPlayerPawnOut == false && arg == 6){
-            this.currentPlayerNumber--;
-            if(this.currentPlayerNumber == -1)
-                this.currentPlayerNumber = 3;
-        }
+//        else if(checkPlayerPawnOut == false && arg == 6){
+//            this.currentPlayerNumber--;
+//            if(this.currentPlayerNumber == -1)
+//                this.currentPlayerNumber = 3;
+//        }
+    }
+
+    public void setCurrentPlayerNumber(){
+        this.currentPlayerNumber++;
+        if(this.currentPlayerNumber > 3)
+            this.currentPlayerNumber = 0;
+        boardObj.setCurrentPlayerNumberBoxLabel(this.currentPlayerNumber);
     }
     public void cutAnotherPawns(int x, int y,int currentPlayerNumber){
         for(Pawns obj: playerList){
-            if(obj.getId().indexOf(currentPlayerNumber) == -1){
+            if(!obj.getId().matches("Player_" + currentPlayerNumber)){
                 obj.cutAnotherPawn(x,y,currentPlayerNumber);
             }
         }
@@ -94,10 +103,10 @@ public class Player extends Circle {
                 currentPawnPath = Constants.path_RED;
                 break;
             case 1:
-                currentPawnPath = Constants.path_YELLOW;
+                currentPawnPath = Constants.path_GREEN;
                 break;
             case 2:
-                currentPawnPath = Constants.path_GREEN;
+                currentPawnPath = Constants.path_YELLOW;
                 break;
             case 3:
                 currentPawnPath = Constants.path_BLUE;
@@ -105,7 +114,7 @@ public class Player extends Circle {
         }
         cutAnotherPawns(currentPawnPath[arg][0],currentPawnPath[arg][1],currentPlayerNumber);
         currentPlayersPawn.setPosCoordinates(currentPawnPath[arg][0],currentPawnPath[arg][1]);
-        currentPlayersPawn.setPos((currentPawnPath[arg][0] * 23) + (23/2), (currentPawnPath[arg][0] * 23)+ (23/2));
+        currentPlayersPawn.setPos((currentPawnPath[arg][0] * 23) + (23/2), (currentPawnPath[arg][1] * 23)+ (23/2));
         currentPlayersPawn.setToHome(false);
         if(arg == 57){
             currentPlayersPawn.setIsDone(true);
@@ -113,12 +122,12 @@ public class Player extends Circle {
         if(getIfWin(currentPlayerNumber)){
             boardObj.setWinLabel(currentPlayerNumber,this.currentWinner++);
         }
-        boardObj.resetAlpha();
-        boardObj.wobblePlayers(this.currentPlayerNumber);
-        this.currentPlayerNumber++;
-        if(this.currentPlayerNumber > 3)
-            this.currentPlayerNumber = 0;
-        setCurrentPlayer(getDiceValue());
+        if(getDiceValue() != 6){
+            boardObj.resetAlpha();
+            boardObj.wobblePlayers(this.currentPlayerNumber+1 <4 ? this.currentPlayerNumber+1 : 0);
+            setCurrentPlayerNumber();
+        }
+//        setCurrentPlayer(getDiceValue());
     }
     public int getPositionIndex(Circle currentPlayersPawn, int currentPlayerNumber){
         int index = 0;
@@ -128,10 +137,10 @@ public class Player extends Circle {
                 currentPawnPath = Constants.path_RED;
                 break;
             case 1:
-                currentPawnPath = Constants.path_YELLOW;
+                currentPawnPath = Constants.path_GREEN;
                 break;
             case 2:
-                currentPawnPath = Constants.path_GREEN;
+                currentPawnPath = Constants.path_YELLOW;
                 break;
             case 3:
                 currentPawnPath = Constants.path_BLUE;
@@ -139,7 +148,7 @@ public class Player extends Circle {
         }
         int i =0;
         for(int[] obj : currentPawnPath) {
-            if (currentPlayersPawn.getPosCoordinates().x == obj[0] && currentPlayersPawn.getPosCoordinates().y == obj[1])
+            if ((int)currentPlayersPawn.getPosCoordinates().x ==(int)obj[0] && (int)currentPlayersPawn.getPosCoordinates().y == (int)obj[1])
                 index = i;
             else
                 i++;
@@ -175,7 +184,7 @@ public class Player extends Circle {
 
     public void setPlayersPawn(int x,int y, Pawns currentPlayersPawns, int currentPlayerNumber, int diceValue){
         Circle currentPlayersPawn = currentPlayersPawns.getPawn(x,y,currentPlayerNumber);
-        if(currentPlayersPawn.getOutProperty() == false){
+        if(currentPlayersPawn.getOutProperty() == false && diceValue == 6){
             setPawnToHomeBox(currentPlayersPawn,currentPlayerNumber);
             currentPlayersPawn.setOutProperty(true);
         }else if(currentPlayersPawn.getOutProperty() == true){

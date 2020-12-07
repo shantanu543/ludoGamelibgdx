@@ -97,7 +97,7 @@ public class Circle extends GameObject {
         this.posCoordinates.y = y;
     }
     public Vector2 getPosCoordinates(){
-        return this.initialPos;
+        return this.posCoordinates;
     }
     public void setIsDone(boolean arg){
         this.isDone = arg;

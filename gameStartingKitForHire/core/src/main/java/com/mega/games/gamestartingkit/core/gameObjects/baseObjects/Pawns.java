@@ -98,10 +98,10 @@ public class Pawns extends Circle {
                 current_players_Pawn_Array = pawnList_RED;
                 break;
             case 1:
-                current_players_Pawn_Array = pawnList_YELLOW;
+                current_players_Pawn_Array = pawnList_GREEN;
                 break;
             case 2:
-                current_players_Pawn_Array = pawnList_GREEN;
+                current_players_Pawn_Array = pawnList_YELLOW;
                 break;
             case 3:
                 current_players_Pawn_Array = pawnList_BLUE;
@@ -145,7 +145,7 @@ public class Pawns extends Circle {
                 currentPawnArray = pawnList_RED;
                 break;
             case 1:
-                currentPawnArray = pawnList_YELLOW;
+                currentPawnArray = pawnList_GREEN;
                 break;
             case 2:
                 currentPawnArray = pawnList_YELLOW;
@@ -155,8 +155,9 @@ public class Pawns extends Circle {
                 break;
         }
         for(Circle obj : currentPawnArray){
-            if(obj.getPosCoordinates().x == x && obj.getPosCoordinates().y == y){
-                obj.setPos(obj.getInitialPos().x,obj.getInitialPos().y);
+            if((int)obj.getPosCoordinates().x == (int)x && (int)obj.getPosCoordinates().y == (int)y){
+                obj.setPos((obj.getInitialPos().x * Constants.BOX_Width) + (Constants.BOX_Width/ 2),
+                        (obj.getInitialPos().y * Constants.BOX_Height) + (Constants.BOX_Height /2));
                 obj.setPosCoordinates(obj.getInitialPos().x,obj.getInitialPos().y);
                 obj.setToHome(false);
             }
