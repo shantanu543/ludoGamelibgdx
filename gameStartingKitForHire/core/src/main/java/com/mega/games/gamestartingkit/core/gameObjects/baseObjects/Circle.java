@@ -67,18 +67,23 @@ public class Circle extends GameObject {
         batch.setColor(new Color(1,1,1,1));
     }
 
+    // setter and getter for each circle's id.
     public void setId(String str){
         this.id = str;
     }
     public String getId(){
         return this.id;
     }
+
+    // setter & getter for each circle's out property.
     public void setOutProperty(boolean arg){
         this.currenPlayerPawnOutProp = arg;
     }
     public boolean getOutProperty(){
         return this.currenPlayerPawnOutProp;
     }
+
+    // setter and getter for initialPositions of each circle.
     public void setInitialPos(float x, float y){
         this.initialPos.x = x;
         this.initialPos.y = y;
@@ -86,12 +91,16 @@ public class Circle extends GameObject {
     public Vector2 getInitialPos(){
         return this.initialPos;
     }
+
+    // setter & getter for home(first box) property of each circle.
     public void setToHome(boolean arg){
         this.currentPlayerPawnAtHome = arg;
     }
     public boolean getToHome(){
         return this.currentPlayerPawnAtHome;
     }
+
+    // setter & getter for position coordinates of each circle.
     public void setPosCoordinates(float x, float y){
         this.posCoordinates.x = x;
         this.posCoordinates.y = y;
@@ -99,6 +108,8 @@ public class Circle extends GameObject {
     public Vector2 getPosCoordinates(){
         return this.posCoordinates;
     }
+
+    //setter and getter for done property of each circle.
     public void setIsDone(boolean arg){
         this.isDone = arg;
     }

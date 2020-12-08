@@ -16,11 +16,11 @@ public class Dice extends Box {
     private Player playerObj;
     private int curr = 1;
     public Dice(Player player){
-        super(23,23,Color.CORAL);
+        super(Constants.BOX_Width,Constants.BOX_Height,Color.CORAL);
         this.playerObj = player;
-        this.DiceBox = new Box(23,23,Color.CYAN);
-        this.DiceBox.setPos((Constants.BOX_Width * 7),(Constants.BOX_Height * 16));
-        this.DiceLabel.setPosition((Constants.BOX_Width * 7),(Constants.BOX_Height * 16));
+        this.DiceBox = new Box(Constants.BOX_Width,Constants.BOX_Height,Color.CYAN);
+        this.DiceBox.setPos((Constants.BOX_Width * Constants.DICE_BOX_X_POS),(Constants.BOX_Height * Constants.DICE_BOX_Y_POS));
+        this.DiceLabel.setPosition((Constants.BOX_Width * Constants.DICE_BOX_X_POS),(Constants.BOX_Height * Constants.DICE_BOX_Y_POS));
         this.DiceLabel.setSize(GameData._virtualWidth,GameAssetManager.getInstance().scoreFontSize);
         this.DiceLabel.setAlignment(Align.left);
         this.DiceLabel.setWrap(true);
@@ -28,26 +28,25 @@ public class Dice extends Box {
     }
     @Override
     public void onTouchDown(float x, float y) {
-        if(x >= Constants.BOX_Width * 7 & x <=( Constants.BOX_Width * 7) + 23 & y >= Constants.BOX_Height * 16 &
-        y<= (Constants.BOX_Height * 16) + 23){
+        if(x >= Constants.BOX_Width * Constants.DICE_BOX_X_POS && x <=( Constants.BOX_Width * Constants.DICE_BOX_X_POS) + Constants.BOX_Width
+                && y >= Constants.BOX_Height * Constants.DICE_BOX_Y_POS && y<= (Constants.BOX_Height * Constants.DICE_BOX_Y_POS) + Constants.BOX_Height){
             setDiceLabel();
             playerObj.setDiceValue(Integer.parseInt(this.DiceLabel.getText().toString()));
             playerObj.setCurrentPlayer(Integer.parseInt(this.DiceLabel.getText().toString()));
         }
     }
 
-    public void setDiceLabel(){
-        this.DiceLabel.setText(Constants.DICE_MIN + (int)(Math.random() * Constants.DICE_MAX) );
-//        this.DiceLabel.setText((this.curr++) % 7)
-    }
-
-    public int getDiceLabel(){
-        return Integer.parseInt(this.DiceLabel.getText().toString());
-    }
-
     @Override
     public void draw(Batch batch) {
         this.DiceBox.draw(batch);
         this.DiceLabel.draw(batch,1);
+    }
+
+    // setter & getter for dice label.
+    public void setDiceLabel(){
+        this.DiceLabel.setText(Constants.DICE_MIN + (int)(Math.random() * Constants.DICE_MAX) );
+    }
+    public int getDiceLabel(){
+        return Integer.parseInt(this.DiceLabel.getText().toString());
     }
 }

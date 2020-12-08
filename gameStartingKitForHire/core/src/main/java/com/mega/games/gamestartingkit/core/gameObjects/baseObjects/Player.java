@@ -26,7 +26,7 @@ public class Player extends Circle {
     private int currentWinner = 1;
     private List<Integer> PlayerNumbersList=new ArrayList<Integer>();
     public  Player(Board board){
-        super(15, Color.CORAL);
+        super(23, Color.CORAL);
         this.boardObj = board;
 
     }
@@ -139,6 +139,7 @@ public class Player extends Circle {
 //        setCurrentPlayer(getDiceValue());
     }
 
+    // function to place pawns of same player at stack.
     public void place_stack_elements_side_by_side(int currentPlayerNumber,Circle currentPlayersPawn){
         for(Pawns obj: playerList){
             if(obj.getId().matches(Constants.PlayerInitials + currentPlayerNumber)){
@@ -178,27 +179,27 @@ public class Player extends Circle {
     public void setPawnToHomeBox(Circle currentPawn,int currentPlayerNumber){
         switch(currentPlayerNumber){
             case 0:
-                currentPawn.setPos((Constants.homeBox_RED[0] * Constants.BOX_Width) + (Constants.BOX_Width/2),
-                        (Constants.homeBox_RED[1] * Constants.BOX_Height)+ ( Constants.BOX_Height/2));
-                currentPawn.setPosCoordinates(Constants.homeBox_RED[0],Constants.homeBox_RED[1]);
+                currentPawn.setPos((Constants.homeBox_Player1[0] * Constants.BOX_Width) + (Constants.BOX_Width/2),
+                        (Constants.homeBox_Player1[1] * Constants.BOX_Height)+ ( Constants.BOX_Height/2));
+                currentPawn.setPosCoordinates(Constants.homeBox_Player1[0],Constants.homeBox_Player1[1]);
                 currentPawn.setToHome(true);
                 break;
             case 1:
-                currentPawn.setPos((Constants.homeBox_GREEN[0] * Constants.BOX_Width)+ (Constants.BOX_Width/2),
-                        (Constants.homeBox_GREEN[1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
-                currentPawn.setPosCoordinates(Constants.homeBox_GREEN[0],Constants.homeBox_GREEN[1]);
+                currentPawn.setPos((Constants.homeBox_Player2[0] * Constants.BOX_Width)+ (Constants.BOX_Width/2),
+                        (Constants.homeBox_Player2[1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
+                currentPawn.setPosCoordinates(Constants.homeBox_Player2[0],Constants.homeBox_Player2[1]);
                 currentPawn.setToHome(true);
                 break;
             case 2:
-                currentPawn.setPos((Constants.homeBox_YELLOW[0] * Constants.BOX_Width)+ (Constants.BOX_Width/2),
-                        (Constants.homeBox_YELLOW[1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
-                currentPawn.setPosCoordinates(Constants.homeBox_YELLOW[0],Constants.homeBox_YELLOW[1]);
+                currentPawn.setPos((Constants.homeBox_Player3[0] * Constants.BOX_Width)+ (Constants.BOX_Width/2),
+                        (Constants.homeBox_Player3[1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
+                currentPawn.setPosCoordinates(Constants.homeBox_Player3[0],Constants.homeBox_Player3[1]);
                 currentPawn.setToHome(true);
                 break;
             case 3:
-                currentPawn.setPos((Constants.homeBox_BLUE[0] * Constants.BOX_Width)+ (Constants.BOX_Width/2),
-                        (Constants.homeBox_BLUE[1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
-                currentPawn.setPosCoordinates(Constants.homeBox_BLUE[0],Constants.homeBox_BLUE[1]);
+                currentPawn.setPos((Constants.homeBox_Player4[0] * Constants.BOX_Width)+ (Constants.BOX_Width/2),
+                        (Constants.homeBox_Player4[1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
+                currentPawn.setPosCoordinates(Constants.homeBox_Player4[0],Constants.homeBox_Player4[1]);
                 currentPawn.setToHome(true);
                 break;
         }

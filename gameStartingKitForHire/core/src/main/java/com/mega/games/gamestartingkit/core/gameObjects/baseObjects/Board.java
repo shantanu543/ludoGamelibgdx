@@ -20,13 +20,15 @@ public class Board extends Box{
     private Box CurrentPlayerNumberBox;
     private Label CurrentPlayerNumberBoxLabel = new Label("", GameAssetManager.getInstance().scoreLabelStyle);
     public Board() {
-        super(23,23,Color.LIGHT_GRAY);
+        super(Constants.BOX_Width,Constants.BOX_Height,Color.LIGHT_GRAY);
         this.HomeBoxLabel.setSize(GameData._virtualWidth,GameAssetManager.getInstance().scoreFontSize);
         this.HomeBoxLabel.setAlignment(Align.left);
         this.HomeBoxLabel.setWrap(true);
-        this.CurrentPlayerNumberBox = new Box(23,23,Color.ORANGE);
-        this.CurrentPlayerNumberBox.setPos((Constants.BOX_Width * 12),(Constants.BOX_Height * 16));
-        this.CurrentPlayerNumberBoxLabel.setPosition((Constants.BOX_Width * 12) +(Constants.BOX_Width / 2) ,(Constants.BOX_Height * 16));
+        this.CurrentPlayerNumberBox = new Box(Constants.BOX_Width,Constants.BOX_Height,Color.ORANGE);
+        this.CurrentPlayerNumberBox.setPos((Constants.BOX_Width * Constants.CURRENT_PLAYER_NUMBER_BOX_X_POS),
+                (Constants.BOX_Height * Constants.CURRENT_PLAYER_NUMBER_BOX_Y_POS));
+        this.CurrentPlayerNumberBoxLabel.setPosition((Constants.BOX_Width * Constants.CURRENT_PLAYER_NUMBER_BOX_X_POS) +(Constants.BOX_Width / 2) ,
+                (Constants.BOX_Height * Constants.CURRENT_PLAYER_NUMBER_BOX_Y_POS));
         this.CurrentPlayerNumberBoxLabel.setSize(GameData._virtualWidth,GameAssetManager.getInstance().scoreFontSize);
         this.CurrentPlayerNumberBoxLabel.setAlignment(Align.left);
         this.CurrentPlayerNumberBoxLabel.setWrap(true);
@@ -56,6 +58,7 @@ public class Board extends Box{
         this.CurrentPlayerNumberBoxLabel.draw(batch,1);
     }
 
+    // function to set current player's number in player number box.
     public void setCurrentPlayerNumberBoxLabel(int arg){
         this.CurrentPlayerNumberBoxLabel.setText(arg);
     }
@@ -81,12 +84,14 @@ public class Board extends Box{
                     currentColor = Color.SKY;
                     currentBoxId = "BlueBox";
                 }
-//                else if((i >=0 & i<=5 & j>=0 & j<=5) || (i >=9 & i<=14 & j>=0 & j<=5) ||
-//                        (i >=0 & i<=5 & j>=9 & j<=14) || (i >=9 & i<=14 & j>=9 & j<=14))
-//                    currentColor = Color.WHITE;
-                currentBox = new Box(23,23, currentColor);
+                else if((i >=0 & i<=5 & j>=0 & j<=5) || (i >=9 & i<=14 & j>=0 & j<=5) ||
+                        (i >=0 & i<=5 & j>=9 & j<=14) || (i >=9 & i<=14 & j>=9 & j<=14))
+                    currentColor = Color.WHITE;
+                else if(i>= 6 && i<= 8 && j>= 6 && j<= 8)
+                    currentColor = Color.MAGENTA;
+                currentBox = new Box(Constants.BOX_Width,Constants.BOX_Height, currentColor);
                 currentBox.setId(currentBoxId);
-                currentBox.setPos(23*i,23*j);
+                currentBox.setPos(Constants.BOX_Width*i,Constants.BOX_Height*j);
                 this.HomeBoxLabel.setPosition(Constants.BOX_Width * i,Constants.BOX_Height * j);
                 boardArray.add(currentBox);
             }
@@ -125,28 +130,28 @@ public class Board extends Box{
         switch(arg){
             case 0:
                 for(Box obj : boardArray){
-                    if(obj.getId() == "RedBox"){
+                    if(obj.getId() == Constants.Player1s_Box_intials){
                         changeAlpha(obj);
                     }
                 }
                 break;
             case 1:
                 for(Box obj : boardArray){
-                    if(obj.getId() == "GreenBox"){
+                    if(obj.getId() == Constants.Player2s_Box_initials){
                         changeAlpha(obj);
                     }
                 }
                 break;
             case 2:
                 for(Box obj : boardArray){
-                    if(obj.getId() == "YellowBox"){
+                    if(obj.getId() == Constants.Player3s_Box_initials){
                         changeAlpha(obj);
                     }
                 }
                 break;
             case 3:
                 for(Box obj : boardArray){
-                    if(obj.getId() == "BlueBox"){
+                    if(obj.getId() == Constants.Player4s_Box_initials){
                         changeAlpha(obj);
                     }
                 }
@@ -154,24 +159,25 @@ public class Board extends Box{
         }
     }
 
+    // function to set winner id for players.
     public void setWinLabel(int currentPlayerNumber, int currentWinner){
         int[] currentPlayersHomeBox = new int[2];
         switch(currentPlayerNumber){
             case 0:
-                currentPlayersHomeBox = Constants.homeBox_RED;
+                currentPlayersHomeBox = Constants.homeBox_Player1;
                 break;
             case 1:
-                currentPlayersHomeBox = Constants.homeBox_GREEN;
+                currentPlayersHomeBox = Constants.homeBox_Player2;
                 break;
             case 2:
-                currentPlayersHomeBox = Constants.homeBox_YELLOW;
+                currentPlayersHomeBox = Constants.homeBox_Player3;
                 break;
             case 3:
-                currentPlayersHomeBox = Constants.homeBox_BLUE;
+                currentPlayersHomeBox = Constants.homeBox_Player4;
                 break;
         }
         for(Box obj: boardArray){
-            if(obj.getPos().x == (currentPlayersHomeBox[0] * 23) && obj.getPos().y == (currentPlayersHomeBox[1]*23)){
+            if(obj.getPos().x == (currentPlayersHomeBox[0] * Constants.BOX_Width) && obj.getPos().y == (currentPlayersHomeBox[1]*Constants.BOX_Height)){
                 setHomeBoxLabel(currentWinner);
             }
         }

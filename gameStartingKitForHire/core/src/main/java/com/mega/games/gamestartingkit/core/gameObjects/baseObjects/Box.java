@@ -44,6 +44,8 @@ public class Box extends GameObject {
         batch.setColor(new Color(1,1,1,1));
 
     }
+
+    // setter & getter for each box id.
     public void setId(String str){
         this.id = str;
     }
