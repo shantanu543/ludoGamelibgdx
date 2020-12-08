@@ -10,19 +10,21 @@ import com.mega.games.gamestartingkit.core.dataLoaders.GameAssetManager;
 import com.mega.games.gamestartingkit.core.dataLoaders.GameData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import sun.font.TrueTypeFont;
 
 public class Player extends Circle {
-    public ArrayList<Pawns>playerList = new ArrayList<>();
-    private Pawns currentPlayersPawns;
-    private Board boardObj;
     private int currentPlayer;
     private int currentPlayerNumber =0;
     private int currentDiceValue= 0;
+    public ArrayList<Pawns>playerList = new ArrayList<>();
+    private Pawns currentPlayersPawns;
+    private Board boardObj;
     private Vector2 currentPawnsCoordinates = new Vector2();
     private Dice dice;
     private int currentWinner = 1;
+    private List<Integer> PlayerNumbersList=new ArrayList<Integer>();
     public  Player(Board board){
         super(15, Color.CORAL);
         this.boardObj = board;
@@ -35,119 +37,127 @@ public class Player extends Circle {
             obj.draw(batch);
         }
     }
-    public int getDiceValue(){
-        return this.currentDiceValue;
-    }
-    public void setDiceValue(int arg){
-         this.currentDiceValue = arg;
-    }
+
+    // intiialising the players.
     public void initPlayers(){
         for(int i =0;i<4;i++){
             currentPlayersPawns = new Pawns();
             currentPlayersPawns.drawPawns(i);
-            currentPlayersPawns.setId("Player_" + i);
+            currentPlayersPawns.setId(Constants.PlayerInitials + i);
             playerList.add(currentPlayersPawns);
+            this.PlayerNumbersList.add(i);
         }
     }
     @Override
     public void onTouchDown(float x, float y) {
-            if(Math.floor(x/23) >= 0 && Math.floor(x/23) <= 14 && Math.floor(y/23) >= 0 && Math.floor(y/23) <= 14){
+            if(Math.floor(x/Constants.BOX_Width) >= 0 && Math.floor(x/Constants.BOX_Width) <= 14 &&
+                    Math.floor(y/Constants.BOX_Height) >= 0 && Math.floor(y/Constants.BOX_Height) <= 14){
                 double X = x;
                 double Y = y;
-                this.currentPawnsCoordinates.x = (float) Math.floor(X/23);
-                this.currentPawnsCoordinates.y = (float) Math.floor(Y/23);
+                this.currentPawnsCoordinates.x = (float) Math.floor(X/Constants.BOX_Width);
+                this.currentPawnsCoordinates.y = (float) Math.floor(Y/Constants.BOX_Height);
                 setPlayersPawn((int)this.currentPawnsCoordinates.x,(int)this.currentPawnsCoordinates.y,currentPlayersPawns,this.currentPlayerNumber,getDiceValue());
             }
     }
 
-    public boolean checkPlayerPawnOut(int current_Player_Number){
+    // Checking if current players pawns are out.
+    public boolean isPlayers_Pawns_Out(int current_Player_Number){
        Pawns currentPlayerPawns = playerList.get(current_Player_Number);
         return currentPlayerPawns.checkEachPawnsProp(currentPlayerPawns,current_Player_Number);
     }
 
+    // Switch current player
     public void setCurrentPlayer(int arg){
-        boolean checkPlayerPawnOut = checkPlayerPawnOut(this.currentPlayerNumber);
-        if( checkPlayerPawnOut == false && arg != 6){
+        boolean isPlayersPawnsOut = isPlayers_Pawns_Out(getCurrentPlayerNumber());
+        if( isPlayersPawnsOut == false && arg != 6){
             boardObj.resetAlpha();
-            boardObj.wobblePlayers(this.currentPlayerNumber+1 <4 ? this.currentPlayerNumber+1 : 0);
-            setCurrentPlayerNumber();
+            boardObj.wobblePlayers(getCurrentPlayerNumber()+1 <4 ? getCurrentPlayerNumber()+1 : 0);
+            setCurrentPlayerNumber();   // changing the current player number.
         }
-//        else if(checkPlayerPawnOut == false && arg == 6){
-//            this.currentPlayerNumber--;
-//            if(this.currentPlayerNumber == -1)
-//                this.currentPlayerNumber = 3;
-//        }
     }
 
-    public void setCurrentPlayerNumber(){
-        this.currentPlayerNumber++;
-        if(this.currentPlayerNumber > 3)
-            this.currentPlayerNumber = 0;
-        boardObj.setCurrentPlayerNumberBoxLabel(this.currentPlayerNumber);
+    // Getter setter for current player number
+    public int getCurrentPlayerNumber(){
+        return this.currentPlayerNumber;
     }
+    public void setCurrentPlayerNumber(){
+        int index = (PlayerNumbersList.indexOf(this.currentPlayerNumber) + 1) < PlayerNumbersList.size()
+                ? (PlayerNumbersList.indexOf(this.currentPlayerNumber) + 1) : 0;
+        this.currentPlayerNumber = PlayerNumbersList.get(index);
+        boardObj.setCurrentPlayerNumberBoxLabel(this.currentPlayerNumber); // changing value of currrent player number in orange box.
+    }
+
+    // function to cut another players pawn at desired place.
     public void cutAnotherPawns(int x, int y,int currentPlayerNumber){
         for(Pawns obj: playerList){
-            if(!obj.getId().matches("Player_" + currentPlayerNumber)){
-                obj.cutAnotherPawn(x,y,currentPlayerNumber);
+            if(!obj.getId().matches(Constants.PlayerInitials + currentPlayerNumber)){
+                obj.cutAnotherPawn(x,y,Integer.parseInt(String.valueOf(obj.getId().charAt(obj.getId().length() -1))));
             }
         }
     }
-    public boolean getIfWin(int currentPlayerNumber){
+
+    // Check if current Player win.
+    public boolean isWin(int currentPlayerNumber){
         Pawns currentPlayer = playerList.get(currentPlayerNumber);
         return currentPlayer.checkIfWin(currentPlayerNumber);
     }
-    public void changePawnPosition(int arg,Circle currentPlayersPawn, int currentPlayerNumber){
-        int [][] currentPawnPath = new int[Constants.maxRowPath][Constants.maxColumnPath];
+
+    //changing current players current pawn position.
+    public void change_CurrentPlayers_currentPawn_Position(int arg,Circle currentPlayersPawn, int currentPlayerNumber){
+        int [][] current_Players_Pawn_Path = new int[Constants.maxRowPath][Constants.maxColumnPath];
         switch(currentPlayerNumber){
             case 0:
-                currentPawnPath = Constants.path_RED;
+                current_Players_Pawn_Path = Constants.path_RED;
                 break;
             case 1:
-                currentPawnPath = Constants.path_GREEN;
+                current_Players_Pawn_Path = Constants.path_GREEN;
                 break;
             case 2:
-                currentPawnPath = Constants.path_YELLOW;
+                current_Players_Pawn_Path = Constants.path_YELLOW;
                 break;
             case 3:
-                currentPawnPath = Constants.path_BLUE;
+                current_Players_Pawn_Path = Constants.path_BLUE;
                 break;
         }
-        cutAnotherPawns(currentPawnPath[arg][0],currentPawnPath[arg][1],currentPlayerNumber);
-        currentPlayersPawn.setPosCoordinates(currentPawnPath[arg][0],currentPawnPath[arg][1]);
-        currentPlayersPawn.setPos((currentPawnPath[arg][0] * 23) + (23/2), (currentPawnPath[arg][1] * 23)+ (23/2));
+        cutAnotherPawns(current_Players_Pawn_Path[arg][0],current_Players_Pawn_Path[arg][1],currentPlayerNumber);
+        currentPlayersPawn.setPosCoordinates(current_Players_Pawn_Path[arg][0],current_Players_Pawn_Path[arg][1]);
+        currentPlayersPawn.setPos((current_Players_Pawn_Path[arg][0] * Constants.BOX_Width) + (Constants.BOX_Width/2),
+                (current_Players_Pawn_Path[arg][1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
         currentPlayersPawn.setToHome(false);
         if(arg == 57){
             currentPlayersPawn.setIsDone(true);
         }
-        if(getIfWin(currentPlayerNumber)){
+        if(isWin(currentPlayerNumber)){
             boardObj.setWinLabel(currentPlayerNumber,this.currentWinner++);
         }
-        if(getDiceValue() != 6){
+        if(getDiceValue() != Constants.DICE_MAX){
             boardObj.resetAlpha();
-            boardObj.wobblePlayers(this.currentPlayerNumber+1 <4 ? this.currentPlayerNumber+1 : 0);
             setCurrentPlayerNumber();
+            boardObj.wobblePlayers(getCurrentPlayerNumber());
+
         }
 //        setCurrentPlayer(getDiceValue());
     }
+    // function to getPositionIndex of players pawn
     public int getPositionIndex(Circle currentPlayersPawn, int currentPlayerNumber){
         int index = 0;
-        int [][] currentPawnPath = new int[Constants.maxRowPath][Constants.maxColumnPath];
+        int [][] current_Players_Pawn_Path = new int[Constants.maxRowPath][Constants.maxColumnPath];
         switch(currentPlayerNumber){
             case 0:
-                currentPawnPath = Constants.path_RED;
+                current_Players_Pawn_Path = Constants.path_RED;
                 break;
             case 1:
-                currentPawnPath = Constants.path_GREEN;
+                current_Players_Pawn_Path = Constants.path_GREEN;
                 break;
             case 2:
-                currentPawnPath = Constants.path_YELLOW;
+                current_Players_Pawn_Path = Constants.path_YELLOW;
                 break;
             case 3:
-                currentPawnPath = Constants.path_BLUE;
+                current_Players_Pawn_Path = Constants.path_BLUE;
                 break;
         }
         int i =0;
-        for(int[] obj : currentPawnPath) {
+        for(int[] obj : current_Players_Pawn_Path) {
             if ((int)currentPlayersPawn.getPosCoordinates().x ==(int)obj[0] && (int)currentPlayersPawn.getPosCoordinates().y == (int)obj[1])
                 index = i;
             else
@@ -155,25 +165,31 @@ public class Player extends Circle {
         }
         return index;
     }
+
+    // set player's pawn to home box means first box.
     public void setPawnToHomeBox(Circle currentPawn,int currentPlayerNumber){
         switch(currentPlayerNumber){
             case 0:
-                currentPawn.setPos((Constants.homeBox_RED[0] * 23) + (23/2), (Constants.homeBox_RED[1] * 23)+ (23/2));
+                currentPawn.setPos((Constants.homeBox_RED[0] * Constants.BOX_Width) + (Constants.BOX_Width/2),
+                        (Constants.homeBox_RED[1] * Constants.BOX_Height)+ ( Constants.BOX_Height/2));
                 currentPawn.setPosCoordinates(Constants.homeBox_RED[0],Constants.homeBox_RED[1]);
                 currentPawn.setToHome(true);
                 break;
             case 1:
-                currentPawn.setPos((Constants.homeBox_GREEN[0] * 23)+ (23/2), (Constants.homeBox_GREEN[1] * 23)+ (23/2));
+                currentPawn.setPos((Constants.homeBox_GREEN[0] * Constants.BOX_Width)+ (Constants.BOX_Width/2),
+                        (Constants.homeBox_GREEN[1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
                 currentPawn.setPosCoordinates(Constants.homeBox_GREEN[0],Constants.homeBox_GREEN[1]);
                 currentPawn.setToHome(true);
                 break;
             case 2:
-                currentPawn.setPos((Constants.homeBox_YELLOW[0] * 23)+ (23/2), (Constants.homeBox_YELLOW[1] * 23)+ (23/2));
+                currentPawn.setPos((Constants.homeBox_YELLOW[0] * Constants.BOX_Width)+ (Constants.BOX_Width/2),
+                        (Constants.homeBox_YELLOW[1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
                 currentPawn.setPosCoordinates(Constants.homeBox_YELLOW[0],Constants.homeBox_YELLOW[1]);
                 currentPawn.setToHome(true);
                 break;
             case 3:
-                currentPawn.setPos((Constants.homeBox_BLUE[0] * 23)+ (23/2), (Constants.homeBox_BLUE[1] * 23)+ (23/2));
+                currentPawn.setPos((Constants.homeBox_BLUE[0] * Constants.BOX_Width)+ (Constants.BOX_Width/2),
+                        (Constants.homeBox_BLUE[1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
                 currentPawn.setPosCoordinates(Constants.homeBox_BLUE[0],Constants.homeBox_BLUE[1]);
                 currentPawn.setToHome(true);
                 break;
@@ -182,18 +198,27 @@ public class Player extends Circle {
     }
 
 
+    // function to set current players pawn for current round.
     public void setPlayersPawn(int x,int y, Pawns currentPlayersPawns, int currentPlayerNumber, int diceValue){
         Circle currentPlayersPawn = currentPlayersPawns.getPawn(x,y,currentPlayerNumber);
-        if(currentPlayersPawn.getOutProperty() == false && diceValue == 6){
+        if(currentPlayersPawn.getOutProperty() == false && diceValue == Constants.DICE_MAX){
             setPawnToHomeBox(currentPlayersPawn,currentPlayerNumber);
             currentPlayersPawn.setOutProperty(true);
-        }else if(currentPlayersPawn.getOutProperty() == true){
+        }else if(currentPlayersPawn.getOutProperty() == true && currentPlayersPawn.getIsDone() == false){
             int index = getPositionIndex(currentPlayersPawn,currentPlayerNumber);
             int newIndex = index + diceValue;
             if(newIndex <= 57){
-                changePawnPosition(newIndex,currentPlayersPawn,currentPlayerNumber);
+                change_CurrentPlayers_currentPawn_Position(newIndex,currentPlayersPawn,currentPlayerNumber);
             }
         }
+    }
+
+    // Getter Setter for dice value.
+    public int getDiceValue(){
+        return this.currentDiceValue;
+    }
+    public void setDiceValue(int arg){
+        this.currentDiceValue = arg;
     }
 
 }

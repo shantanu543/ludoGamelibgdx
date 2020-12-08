@@ -24,6 +24,7 @@ public class Dice extends Box {
         this.DiceLabel.setSize(GameData._virtualWidth,GameAssetManager.getInstance().scoreFontSize);
         this.DiceLabel.setAlignment(Align.left);
         this.DiceLabel.setWrap(true);
+
     }
     @Override
     public void onTouchDown(float x, float y) {

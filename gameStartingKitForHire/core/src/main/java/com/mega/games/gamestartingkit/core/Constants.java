@@ -9,6 +9,7 @@ public class Constants {
     public static int BOX_Height = 23;
     public static int DICE_MIN = 1;
     public static int DICE_MAX = 6;
+    public static String PlayerInitials = "Player_";
     public static int [][] initialPosition_RED = {
             {2,1}, {2,3}, {3,1}, {3,3}
     };

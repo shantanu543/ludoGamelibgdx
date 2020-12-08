@@ -156,10 +156,10 @@ public class Pawns extends Circle {
         }
         for(Circle obj : currentPawnArray){
             if((int)obj.getPosCoordinates().x == (int)x && (int)obj.getPosCoordinates().y == (int)y){
-                obj.setPos((obj.getInitialPos().x * Constants.BOX_Width) + (Constants.BOX_Width/ 2),
-                        (obj.getInitialPos().y * Constants.BOX_Height) + (Constants.BOX_Height /2));
+                obj.setPos((obj.getInitialPos().x) , (obj.getInitialPos().y));
                 obj.setPosCoordinates(obj.getInitialPos().x,obj.getInitialPos().y);
                 obj.setToHome(false);
+                obj.setOutProperty(false);
             }
         }
     }
