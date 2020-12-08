@@ -189,9 +189,8 @@ public class Pawns extends Circle {
                 currentPlayersPawn.setPos(currentPlayersPawn.getPos().x +5, currentPlayersPawn.getPos().y);
             }
             else{
-//                obj.setPos(((int)obj.getPosCoordinates().x * Constants.BOX_Width) + (Constants.BOX_Width/2),
-//                        ((int)obj.getPosCoordinates().y * Constants.BOX_Height)+ (Constants.BOX_Height/2));
-                obj.setPos(obj.getPos().x, obj.getPos().y);
+                obj.setPos(((int)obj.getPosCoordinates().x * Constants.BOX_Width) + (Constants.BOX_Width/2),
+                        ((int)obj.getPosCoordinates().y * Constants.BOX_Height)+ (Constants.BOX_Height/2));
             }
         }
     }

@@ -124,6 +124,7 @@ public class Player extends Circle {
         currentPlayersPawn.setPos((current_Players_Pawn_Path[arg][0] * Constants.BOX_Width) + (Constants.BOX_Width/2),
                 (current_Players_Pawn_Path[arg][1] * Constants.BOX_Height)+ (Constants.BOX_Height/2));
         currentPlayersPawn.setToHome(false);
+        place_stack_elements_side_by_side(currentPlayerNumber,currentPlayersPawn);
         if(arg == 57){
             currentPlayersPawn.setIsDone(true);
         }
@@ -134,9 +135,16 @@ public class Player extends Circle {
             boardObj.resetAlpha();
             setCurrentPlayerNumber();
             boardObj.wobblePlayers(getCurrentPlayerNumber());
-
         }
 //        setCurrentPlayer(getDiceValue());
+    }
+
+    public void place_stack_elements_side_by_side(int currentPlayerNumber,Circle currentPlayersPawn){
+        for(Pawns obj: playerList){
+            if(obj.getId().matches(Constants.PlayerInitials + currentPlayerNumber)){
+                obj.placeAnotherPawnOverStack(currentPlayersPawn,Integer.parseInt(String.valueOf(obj.getId().charAt(obj.getId().length() -1))));
+            }
+        }
     }
     // function to getPositionIndex of players pawn
     public int getPositionIndex(Circle currentPlayersPawn, int currentPlayerNumber){
