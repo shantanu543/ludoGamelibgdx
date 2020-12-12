@@ -1,5 +1,8 @@
 package com.mega.games.gamestartingkit.core.gameObjects.baseObjects;
 
+import com.badlogic.gdx.Audio;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -21,14 +24,16 @@ public class Player extends Circle {
     public ArrayList<Pawns>playerList = new ArrayList<>();
     private Pawns currentPlayersPawns;
     private Board boardObj;
+    public GlobalObjects globalObjectsObj;
     private Vector2 currentPawnsCoordinates = new Vector2();
     private Dice dice;
     private int currentWinner = 1;
     private List<Integer> PlayerNumbersList=new ArrayList<Integer>();
-    public  Player(Board board){
+    private Music sound;
+    public  Player(Board board, GlobalObjects globalObjects){
         super(23, Color.CORAL);
         this.boardObj = board;
-
+        this.globalObjectsObj = globalObjects;
     }
 
     @Override
@@ -51,7 +56,7 @@ public class Player extends Circle {
     @Override
     public void onTouchDown(float x, float y) {
             if(Math.floor(x/Constants.BOX_Width) >= 0 && Math.floor(x/Constants.BOX_Width) <= 14 &&
-                    Math.floor(y/Constants.BOX_Height) >= 0 && Math.floor(y/Constants.BOX_Height) <= 14){
+                    Math.floor(y/Constants.BOX_Height) >= 0 && Math.floor(y/Constants.BOX_Height) <= 14 && globalObjectsObj.getDiceCanBePressedAgain() == true){
                 double X = x;
                 double Y = y;
                 this.currentPawnsCoordinates.x = (float) Math.floor(X/Constants.BOX_Width);
@@ -85,6 +90,7 @@ public class Player extends Circle {
                 ? (PlayerNumbersList.indexOf(this.currentPlayerNumber) + 1) : 0;
         this.currentPlayerNumber = PlayerNumbersList.get(index);
         boardObj.setCurrentPlayerNumberBoxLabel(this.currentPlayerNumber); // changing value of currrent player number in orange box.
+        this.globalObjectsObj.setDiceEnabled(true);
     }
 
     // function to cut another players pawn at desired place.
@@ -130,12 +136,18 @@ public class Player extends Circle {
         }
         if(isWin(currentPlayerNumber)){
             boardObj.setWinLabel(currentPlayerNumber,this.currentWinner++);
+//            sound = Gdx.audio.newMusic(Gdx.files.internal("bg.mp3"));
+//            sound.play();
+            this.globalObjectsObj.setDiceEnabled(false);
+            this.globalObjectsObj.setisWinOfAnyPlayerBool(true);
+            return;
         }
         if(getDiceValue() != Constants.DICE_MAX){
             boardObj.resetAlpha();
             setCurrentPlayerNumber();
             boardObj.wobblePlayers(getCurrentPlayerNumber());
         }
+
 //        setCurrentPlayer(getDiceValue());
     }
 
@@ -203,7 +215,6 @@ public class Player extends Circle {
                 currentPawn.setToHome(true);
                 break;
         }
-
     }
 
 
@@ -213,12 +224,18 @@ public class Player extends Circle {
         if(currentPlayersPawn.getOutProperty() == false && diceValue == Constants.DICE_MAX){
             setPawnToHomeBox(currentPlayersPawn,currentPlayerNumber);
             currentPlayersPawn.setOutProperty(true);
+            this.globalObjectsObj.setDiceCanBePressedAgain(false);
+            this.globalObjectsObj.setDiceEnabled(true);
+
         }else if(currentPlayersPawn.getOutProperty() == true && currentPlayersPawn.getIsDone() == false){
             int index = getPositionIndex(currentPlayersPawn,currentPlayerNumber);
             int newIndex = index + diceValue;
             if(newIndex <= 57){
                 change_CurrentPlayers_currentPawn_Position(newIndex,currentPlayersPawn,currentPlayerNumber);
             }
+            this.globalObjectsObj.setDiceEnabled(true);
+            globalObjectsObj.setDiceCanBePressedAgain(false);
+            this.globalObjectsObj.setPressDiceBool(true);
         }
     }
 

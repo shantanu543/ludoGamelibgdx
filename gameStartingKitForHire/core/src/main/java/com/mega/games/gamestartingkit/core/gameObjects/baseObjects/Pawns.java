@@ -12,7 +12,7 @@ public class Pawns extends Circle {
     public static ArrayList<Circle>pawnList_Second_Player = new ArrayList<>();
     public static ArrayList<Circle>pawnList_Third_Player = new ArrayList<>();
     public static ArrayList<Circle>pawnList_Fourth_Player = new ArrayList<>();
-
+    private boolean oneCutAlready = false;
     public Pawns(){
         super(Constants.RADIUS_PAWN, Color.BLACK);
     }
@@ -149,6 +149,7 @@ public class Pawns extends Circle {
     //function to cut another players pawn.
     public void cutAnotherPawn(int x, int y,int currentPlayerNumber){
         ArrayList<Circle>currentPawnArray = new ArrayList<>();
+        this.oneCutAlready = false;
         switch(currentPlayerNumber){
             case 0:
                 currentPawnArray = pawnList_First_player;
@@ -164,11 +165,12 @@ public class Pawns extends Circle {
                 break;
         }
         for(Circle obj : currentPawnArray){
-            if((int)obj.getPosCoordinates().x == (int)x && (int)obj.getPosCoordinates().y == (int)y){
+            if((int)obj.getPosCoordinates().x == (int)x && (int)obj.getPosCoordinates().y == (int)y && this.oneCutAlready == false){
                 obj.setPos((obj.getInitialPos().x) , (obj.getInitialPos().y));
                 obj.setPosCoordinates(obj.getInitialPos().x,obj.getInitialPos().y);
                 obj.setToHome(false);
                 obj.setOutProperty(false);
+                this.oneCutAlready = true;
             }
         }
     }
@@ -197,7 +199,14 @@ public class Pawns extends Circle {
                 currentPlayersPawn.setPos(currentPlayersPawn.getPos().x +Constants.Stacked_Pawns_Space, currentPlayersPawn.getPos().y);
             }
             else{
-                obj.setPos(obj.getPos().x, obj.getPos().y);
+                obj.setPos((obj.getPosCoordinates().x * Constants.BOX_Width) + (Constants.BOX_Width /2), obj.getPos().y);
+                for(Circle obj2 : currentPawnArray) {
+                    if ((int) obj2.getPosCoordinates().x == (int) obj.getPosCoordinates().x &&
+                            (int) obj2.getPosCoordinates().y == (int) obj.getPosCoordinates().y) {
+                        obj2.setPos(obj2.getPos().x - Constants.Stacked_Pawns_Space, obj2.getPos().y);
+                        obj.setPos(obj.getPos().x + Constants.Stacked_Pawns_Space, obj.getPos().y);
+                    }
+                }
             }
         }
     }
@@ -223,6 +232,6 @@ public class Pawns extends Circle {
         for(Circle obj : currentPawnList){
             isWin = obj.getIsDone();
         }
-        return  isWin;
+        return isWin;
     }
 }

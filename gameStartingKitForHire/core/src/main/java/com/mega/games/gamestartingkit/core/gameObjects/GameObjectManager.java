@@ -6,6 +6,7 @@ import com.mega.games.gamestartingkit.core.dataLoaders.GameData;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Board;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Box;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Dice;
+import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.GlobalObjects;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Pawns;
 import com.mega.games.gamestartingkit.core.gameObjects.baseObjects.Player;
 import com.mega.games.gamestartingkit.core.gameObjects.entities.Ball;
@@ -18,6 +19,7 @@ public class GameObjectManager {
     private Board board;
     private Player player;
     private Dice dice;
+    private GlobalObjects globalObjects;
     private ArrayList<GameObject> objs;
 
     public void reset(){
@@ -28,9 +30,10 @@ public class GameObjectManager {
 //        ball.setPos(GameData._virtualWidth/2f, GameData._virtualHeight/2f);
         board = new Board();
         board.drawBoard();
-        player = new Player(board);
+        globalObjects = new GlobalObjects();
+        player = new Player(board, globalObjects);
         player.initPlayers();
-        dice = new Dice(player);
+        dice = new Dice(player,globalObjects);
 //        board.setPos(GameData._virtualWidth/2f, GameData._virtualHeight/2f);
 //        box = new Box(25,25,Color.BLUE);
 //        box.setPos(GameData._virtualWidth/2f, GameData._virtualHeight/2f);
